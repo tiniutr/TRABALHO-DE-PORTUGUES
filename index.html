@@ -1,98 +1,139 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz de Português - 9º Ano</title>
-    <style>
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #0f172a; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; color: #f8fafc; }
-        .quiz-container { background-color: #1e293b; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); width: 100%; max-width: 500px; text-align: center; border: 1px solid #334155; }
-        h1 { color: #38bdf8; margin-bottom: 20px; font-size: 24px; font-weight: 700; }
-        .question { font-size: 18px; font-weight: 600; margin-bottom: 25px; color: #e2e8f0; text-align: left; line-height: 1.5; }
-        .options { display: flex; flex-direction: column; gap: 12px; }
-        button { background-color: #334155; border: 1px solid #475569; padding: 14px; border-radius: 8px; font-size: 16px; cursor: pointer; text-align: left; transition: all 0.2s; color: #f1f5f9; }
-        button:hover { background-color: #0284c7; border-color: #38bdf8; }
-        .score-screen { display: none; }
-        .score-text { font-size: 22px; font-weight: bold; color: #4ade80; margin: 20px 0; }
-        .reset-btn { background-color: #0284c7; color: white; border: none; text-align: center; font-weight: bold; width: 100%; }
-        .reset-btn:hover { background-color: #0369a1; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz de Português - 9º Ano</title>
+<style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; background-color: #f172a; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; color: #fbfbfc; }
+   .quiz-container { background-color: #1e293b; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); width: 100%; max-width: 600px; text-align: center; border: 1px solid #334155; }
+    h1 { color: #38bdf8; margin-bottom: 20px; font-size: 24px; font-weight: 700; }
+   .question { font-size: 18px; font-weight: 600; margin-bottom: 25px; color: #e2e8f0; text-align: left; line-height: 1.5; }
+   .options { display: flex; flex-direction: column; gap: 12px; }
+   .opcao { background-color: #334155; border: 1px solid #475569; padding: 14px; border-radius: 8px; font-size: 16px; cursor: pointer; text-align: left; transition: all 0.2s; color: #f1f5f9; }
+   .opcao:hover { background-color: #475569; }
+   .opcao:disabled { cursor: not-allowed; }
+   .opcao.correta { background-color: #16a34a!important; color: white; border-color: #16a34a; }
+   .opcao.errada { background-color: #dc2626!important; color: white; border-color: #dc2626; }
+   .score-screen { display: none; }
+   .score-text { font-size: 22px; font-weight: bold; color: #4ade80; margin: 20px 0; }
+   .reset-btn { background-color: #0284c7; color: white; border: none; padding: 12px; text-align: center; font-weight: bold; width: 100%; border-radius: 8px; cursor: pointer; font-size: 16px; }
+   .reset-btn:hover { background-color: #0369a1; }
+   .placar { background: #16a34a; color: white; padding: 10px; border-radius: 8px; margin-bottom: 15px; font-weight: bold; }
+</style>
 </head>
 <body>
 
 <div class="quiz-container">
     <div id="quiz-box">
         <h1>📝 Quiz de Português - 9º Ano</h1>
+        <div class="placar" id="placar">Acertos: 0 de 6</div>
         <div class="question" id="question-text">Carregando pergunta...</div>
         <div class="options" id="options-container"></div>
     </div>
-    
+
     <div id="score-box" class="score-screen">
-        <h1>📊 Resultado Final</h1>
+        <h1>🏆 Resultado Final</h1>
         <p class="score-text" id="score-result"></p>
-        <button class="reset-btn" onclick="restartQuiz()">Tentar Novamente</button>
+        <button class="reset-btn" onclick="reiniciar()">Refazer Prova</button>
     </div>
 </div>
 
 <script>
-    const quizData = [
-        {
-            q: "Na frase 'Desejo que você seja muito feliz', qual a classificação da oração destacada?",
-            o: ["Substantiva Objetiva Direta", "Substantiva Subjetiva", "Adjetiva Restritiva", "Adverbial Final"],
-            a: 0
-        },
-        {
-            q: "Qual figura de linguagem está presente em: 'O vento beijou meu rosto suavemente'?",
-            o: ["Metáfora", "Hipérbole", "Personificação (Prosopopeia)", "Antítese"],
-            a: 2
-        },
-        {
-            q: "Assinale a alternativa que apresenta o uso CORRETO da crase:",
-            o: ["Entreguei o presente à meu irmão.", "Fui à farmácia comprar os remédios.", "Voltei de pressa para assistir à uma série.", "Prefiro caminhar a correr no parque."],
-            a: 1
-        },
-        {
-            q: "Identifique a regência CORRETA do verbo assistir (no sentido de presenciar):",
-            o: ["Assistimos o espetáculo com emoção.", "Assistimos ao concerto de música clássica.", "Assistimos em um belo show de rock.", "Assistimos o desfile na avenida."],
-            a: 1
-        }
-    ];
+const perguntas = [
+  {
+    pergunta: "1 - Assinale a alternativa em que a vírgula foi usada CORRETAMENTE:",
+    opcoes: ["Preciso, de sua ajuda.", "Maria, venha cá agora.", "Gosto de, ler e escrever.", "Ele comprou pão, leite e, queijo."],
+    resposta: 1
+  },
+  {
+    pergunta: "2 - Qual frase está com a crase usada CORRETAMENTE?",
+    opcoes: ["Vou à pé para a escola.", "Entreguei o presente à minha mãe.", "Ele se referiu à aquele problema.", "Chegamos à noite tarde."],
+    resposta: 1
+  },
+  {
+    pergunta: "3 - Coloque a vírgula no lugar correto: Meus amigos João e Pedro viajaram.",
+    opcoes: ["Meus amigos, João e Pedro, viajaram.", "Meus amigos João, e Pedro viajaram.", "Meus, amigos João e Pedro viajaram.", "Não precisa de vírgula."],
+    resposta: 0
+  },
+  {
+    pergunta: "4 - Em qual alternativa NÃO deve haver crase?",
+    opcoes: ["Cheguei à 8 horas.", "Obedeça à professora.", "Fui à praia no fim de semana.", "Refiro-me àquela questão."],
+    resposta: 0
+  },
+  {
+    pergunta: "5 - Assinale a frase com erro de pontuação:",
+    opcoes: ["Ontem, estudei muito.", "Corri, e cheguei a tempo.", "Meu irmão, Carlos, chegou cedo.", "Comprei arroz, feijão e carne."],
+    resposta: 1
+  },
+  {
+    pergunta: "6 - Complete: Fomos _____ festa _____ aniversário de Ana.",
+    opcoes: ["a / a", "à / à", "a / à", "à / a"],
+    resposta: 2
+  }
+];
 
-    let currentQ = 0;
-    let score = 0;
+let perguntaAtual = 0;
+let acertos = 0;
 
-    function loadQuestion() {
-        if(currentQ >= quizData.length) {
-            document.getElementById('quiz-box').style.display = 'none';
-            document.getElementById('score-box').style.display = 'block';
-            document.getElementById('score-result').innerText = `Você acertou ${score} de ${quizData.length} questões!`;
-            return;
-        }
-        
-        let data = quizData[currentQ];
-        document.getElementById('question-text').innerText = `${currentQ + 1}. ${data.q}`;
-        let optionsHtml = '';
-        data.o.forEach((opt, index) => {
-            optionsHtml += `<button onclick="checkAnswer(${index})">${opt}</button>`;
-        });
-        document.getElementById('options-container').innerHTML = optionsHtml;
+function carregarPergunta() {
+  const q = perguntas[perguntaAtual];
+  document.getElementById('question-text').innerText = q.pergunta;
+  const container = document.getElementById('options-container');
+  container.innerHTML = '';
+  
+  q.opcoes.forEach((opcao, index) => {
+    const btn = document.createElement('button');
+    btn.classList.add('opcao');
+    btn.innerText = opcao;
+    btn.onclick = () => verificarResposta(index, btn);
+    container.appendChild(btn);
+  });
+}
+
+function verificarResposta(indiceClicado, botao) {
+  const correta = perguntas[perguntaAtual].resposta;
+  const botoes = document.querySelectorAll('.opcao');
+  
+  botoes.forEach(b => b.disabled = true);
+  
+  if(indiceClicado === correta) {
+    botao.classList.add('correta');
+    acertos++;
+  } else {
+    botao.classList.add('errada');
+    botoes[correta].classList.add('correta');
+  }
+  
+  atualizarPlacar();
+  
+  setTimeout(() => {
+    perguntaAtual++;
+    if(perguntaAtual < perguntas.length) {
+      carregarPergunta();
+    } else {
+      document.getElementById('score-result').innerText = `Você acertou ${acertos} de ${perguntas.length}`;
+      document.getElementById('score-box').style.display = 'block';
+      document.getElementById('quiz-box').style.display = 'none';
     }
+  }, 1500);
+}
 
-    function checkAnswer(selected) {
-        if(selected === quizData[currentQ].a) { score++; }
-        currentQ++;
-        loadQuestion();
-    }
+function atualizarPlacar() {
+  document.getElementById('placar').innerHTML = `Acertos: ${acertos} de ${perguntas.length}`;
+}
 
-    function restartQuiz() {
-        score = 0;
-        currentQ = 0;
-        document.getElementById('quiz-box').style.display = 'block';
-        document.getElementById('score-box').style.display = 'none';
-        loadQuestion();
-    }
+function reiniciar() {
+  perguntaAtual = 0;
+  acertos = 0;
+  document.getElementById('score-box').style.display = 'none';
+  document.getElementById('quiz-box').style.display = 'block';
+  atualizarPlacar();
+  carregarPergunta();
+}
 
-    loadQuestion();
+carregarPergunta();
 </script>
+
 </body>
 </html>
