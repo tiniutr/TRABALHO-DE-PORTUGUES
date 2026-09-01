@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Português - 9º Ano</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .quiz-container { background-color: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 500px; text-align: center; }
+        h1 { color: #1e3a8a; margin-bottom: 20px; font-size: 24px; }
+        .question { font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #333; text-align: left; }
+        .options { display: flex; flex-direction: column; gap: 10px; }
+        button { background-color: #f3f4f6; border: 2px solid #e5e7eb; padding: 12px; border-radius: 8px; font-size: 16px; cursor: pointer; text-align: left; transition: all 0.2s; }
+        button:hover { background-color: #e0e7ff; border-color: #6366f1; }
+        .score-screen { display: none; }
+        .score-text { font-size: 22px; font-weight: bold; color: #10b981; margin: 20px 0; }
+        .reset-btn { background-color: #3b82f6; color: white; border: none; text-align: center; font-weight: bold; }
+        .reset-btn:hover { background-color: #2563eb; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div id="quiz-box">
+        <h1>📝 Quiz de Português - 9º Ano</h1>
+        <div class="question" id="question-text">Pergunta</div>
+        <div class="options" id="options-container"></div>
+    </div>
+    
+    <div id="score-box" class="score-screen">
+        <h1>📊 Resultado Final</h1>
+        <p class="score-text" id="score-result"></p>
+        <button class="reset-btn" onclick="restartQuiz()">Tentar Novamente</button>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            q: "Qual das frases apresenta uma oração subordinada adverbial causal?",
+            o: ["Como estava chovendo, não fui ao parque.", "Se chover, não irei ao parque.", "Choveu tanto que alagou a rua.", "Embora chovesse, fui ao parque."],
+            a: 0
+        },
+        {
+            q: "Identifique a figura de linguagem em: 'O sol amanheceu sorrindo para a cidade'.",
+            o: ["Metáfora", "Personificação (Prosopopeia)", "Hipérbole", "Eufemismo"],
+            a: 1
+        },
+        {
+            q: "Assinale a alternativa que apresenta o uso CORRETO da crase:",
+            o: ["Entreguei o trabalho à ela.", "Fui à pé para a escola.", "Refiro-me à professora de português.", "Ele começou à chorar de emoção."],
+            a: 2
+        }
+    ];
+
+    let currentQ = 0;
+    let score = 0;
+
+    function loadQuestion() {
+        if(currentQ >= quizData.length) {
+            document.getElementById('quiz-box').style.display = 'none';
+            document.getElementById('score-box').style.display = 'block';
+            document.getElementById('score-result').innerText = `Você acertou ${score} de ${quizData.length} questões!`;
+            return;
+        }
+        
+        let data = quizData[currentQ];
+        document.getElementById('question-text').innerText = `${currentQ + 1}. ${data.q}`;
+        let optionsHtml = '';
+        data.o.forEach((opt, index) => {
+            optionsHtml += `<button onclick="checkAnswer(${index})">${opt}</button>`;
+        });
+        document.getElementById('options-container').innerHTML = optionsHtml;
+    }
+
+    function checkAnswer(selected) {
+        if(selected === quizData[currentQ].a) { score++; }
+        currentQ++;
+        loadQuestion();
+    }
+
+    function restartQuiz() {
+        score = 0;
+        currentQ = 0;
+        document.getElementById('quiz-box').style.display = 'block';
+        document.getElementById('score-box').style.display = 'none';
+        loadQuestion();
+    }
+
+    loadQuestion();
+</script>
+</body>
+</html>
+
